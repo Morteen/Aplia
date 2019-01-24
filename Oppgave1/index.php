@@ -23,61 +23,55 @@
     </nav>
     <section id="showcase">
         <div class="container">
-            <h1>Lorem ipsum dolor sit amet</h1>
+            <h2>Mortens booking side</h2>
         </div>
     </section>
     <div class="container">
         <section id="main">
             <h1>Velkommen</h1>
-            <?php
-             
-                 include_once  'connect.php';
-                 $con=kobleOpp();
-                      if($con){
-                          echo"Success";
-                      };
+            
 
+<form name="bookingForm"action='index.php'method="get" >
+<label class="bookingtext">Fornavn</label>    
+<input type="text"name="FirstName"/>
+<label class="bookingtext">Etternavn</label>    
+<input type="text"name="LastName"/>
+<label class="bookingtext">Telefon</label>    
+<input type="text"name="Phone"/>
+<label class="bookingtext">Email</label>    
+<input type="text"name="Email"/>
+<label>Antall rom</label>
+<input type="number" name="quantity" min="1" max="10">
+  
+<select name='hotelname'>
+    <?php  
+   include_once 'phpScript.php';
+   populateHotelDropDown();
 
-                      if(isset($_POST["submit"])){
-                        $test= $_POST["hotelname"];
-                        echo $test;
-                      
-                     } else{
-                         $test = '0';
-                         echo $test;
-                     }
-                         
-                 
+    ?>
+</select>
 
-
+<input type="submit" name="submit" value="Lagre booking" />
+</form>
+<?php
+/*his/her phone, email and selecting the hotel
+from a drop-down list, the*/
+if($_GET){
+    echo 'Parameterene for SQl spørringen er : HotelId:'.$_GET['hotelname'].$_GET['FirstName'].$_GET['LastName'].$_GET['Phone']."<br>";
+    echo $_GET['Email']."<br>".$_GET['quantity'];
+ }
+?>
 
                     
 	
-    $sqlHotel = "SELECT * FROM hotel";
-    $result=$con->query($sqlHotel);
-    if(!$result) die($conn->error);
-	$rows=$result->num_rows;
+   
 
-echo "<form action=''method='post'><select name='hotelname'>";
-	    for($j=0;$j<$rows;$j++){
-          $result->data_seek($j);
-          $row=$result->fetch_array(MYSQLI_ASSOC);
-          $HotelId = $row['HotellId'];
-          $navn = $row['HotelName'];
-          $NumRooms=$row['NumberOfRooms'];
-          $price=$row['RoomPrice'];
-         
-					echo  "<option value='".$HotelId ."'>".$navn."</option>";
-			       
-    };	
-           		  
-	
-    echo"</select>
-    <input action=''type='submit'name='submit'value='Velg'></input></form>";
 
     
 
-            ?>
+    
+
+            
         </section>
        
     </div> 
