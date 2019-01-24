@@ -15,7 +15,7 @@ function populateHotelDropDown(){
     if(!$result) die($conn->error);
     $rows=$result->num_rows;
 
-
+    echo "<option value='' selected disabled hidden>Velg Hotell her</option>";
     for($j=0;$j<$rows;$j++){
         $result->data_seek($j);
         $row=$result->fetch_array(MYSQLI_ASSOC);

@@ -3,8 +3,30 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ 
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" 
+integrity="sha384-PmY9l28YgO4JwMKbTvgaS7XNZJ30MK9FAZjjzXtlqyZCqBY6X6bXIkM++IkyinN+" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js" 
+integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18Nw" crossorigin="anonymous"></script>
+
+
     <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <title>Min web-side</title>
+    <title>Aplia test</title>
+
+    <script>
+  $( function() {
+    $( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
+  } );
+  </script>
+
+
 </head>
 <body>
    <header id="main-header">
@@ -31,34 +53,108 @@
             <h1>Velkommen</h1>
             
 
-<form name="bookingForm"action='index.php'method="get" >
-<label class="bookingtext">Fornavn</label>    
-<input type="text"name="FirstName"/>
-<label class="bookingtext">Etternavn</label>    
-<input type="text"name="LastName"/>
-<label class="bookingtext">Telefon</label>    
-<input type="text"name="Phone"/>
-<label class="bookingtext">Email</label>    
-<input type="text"name="Email"/>
-<label>Antall rom</label>
-<input type="number" name="quantity" min="1" max="10">
-  
-<select name='hotelname'>
+<form name="bookingForm"action='index.php'method="post" >
+
+<table >
+    <tr>
+        <td><label class="bookingtext">Fornavn</label><br><input type="text"name="FirstName"class="StyleTextfield"/></td>
+        <td><label class="bookingtext">Etternavn</label><br><input type="text"name="LastName"class="StyleTextfield"/></td>
+        <td><label class="bookingtext">Email</label><br><input type="email"name="Email"class="StyleTextfield"/> </td>
+    </tr>
+    
+    
+    <tr>
+        <td><label>Antall rom</label><br><input type="number" name="quantity" min="1" max="10"class="StyleTextfield"></td>
+        <td><label>Velg hotell</label><br><select name='hotelname' class="StyleTextfield">
+<option value="" selected disabled hidden>Velg Hotell her</option>
     <?php  
    include_once 'phpScript.php';
    populateHotelDropDown();
 
     ?>
-</select>
+</select></td>
+<td><label class="bookingtext">Telefon</label><br><input type="text"name="Phone"class="StyleTextfield"/> </td>
+    </tr>
+    
+    <tr>
+        <td><label>Ankomst dato</label><br><input type="text" class="datepicker StyleTextfield" name="ArrivalDate"></td>
+        <td><label>Avreise dato</label><br><input type="text" class="datepicker StyleTextfield" name="DepartureDate"></td>
+        <td></td>
+    </tr>
+    
+    <tr>
+        <td></td>
+        <td><br><input method="post" type="submit" name="submit" value="Lagre booking" class="btn btn-primary"/></td>
+    </tr>
+</table>
 
-<input type="submit" name="submit" value="Lagre booking" />
 </form>
 <?php
 /*his/her phone, email and selecting the hotel
 from a drop-down list, the*/
-if($_GET){
-    echo 'Parameterene for SQl spørringen er : HotelId:'.$_GET['hotelname'].$_GET['FirstName'].$_GET['LastName'].$_GET['Phone']."<br>";
-    echo $_GET['Email']."<br>".$_GET['quantity'];
+if(isset($_POST['submit'])){
+   
+
+    $FirstName=$_POST['FirstName'];
+    $Lastname=$_POST['LastName'];
+    $Phone=$_POST['Phone'];
+    $email=$_POST['Email'];
+    $Quantity=$_POST['quantity'];
+    $ArrivalDate=$_POST['ArrivalDate'];
+    $DepartureDate=$_POST['DepartureDate'];
+    $HotelId=$_POST['hotelname'];
+    $CustomerId="";
+    
+    include_once  'connect.php';
+    $con=kobleOpp();
+         if($con){
+             echo"Success <br>";
+         };
+
+
+    /*$sqlCustomer = "INSERT INTO customer(FirstName,LastName,Phone,Email)VALUES(?,?,?,?)";
+    $stmt=$con->prepare( $sqlCustomer);
+    $stmt->bind_param("ssss",$FirstName,$Lastname,$Phone,$email);*/
+    $sql = "INSERT INTO customer(FirstName,LastName,Phone,Email)VALUES('$FirstName', '$Lastname','$Phone','$email')";
+
+if ($con->query($sql) === TRUE) {
+    echo "New record created successfully<br>";
+////////////////////////////
+$sqlReturnId="SELECT CustomerId FROM customer ORDER BY CustomerId DESC LIMIT 1";
+    $result=$con->query($sqlReturnId);
+    if(!$result) die($conn->error);
+    $rows=$result->num_rows;
+    for($j=0;$j<$rows;$j++){
+        $result->data_seek($j);
+        $row=$result->fetch_array(MYSQLI_ASSOC);
+         
+        $CustomerId=$row['CustomerId'];
+    
+    
+               
+  };
+  $TestInn= new DateTime($ArrivalDate);
+  echo $ArrivalDate."<br>".$DepartureDate."<br>";
+  $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($CustomerId,$HotelId,$ArrivalDate,$TestInn,$Quantity)";
+  if($con->query($bookingSql) ==true){
+    echo "New record created successfully<br>";
+  }else{
+    echo "Error: " . $bookingSql . "<br>" . $con->error;
+  }
+  //////////////	
+ 
+    
+
+    /////////////////
+} else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+}
+    
+    
+$con->close();
+
+
+
  }
 ?>
 
@@ -76,7 +172,8 @@ if($_GET){
        
     </div> 
     <footer id="main-footer">
-        <p>Copyright &copy 2017 Min webside</p>
+        <p>Copyright &copy 2017 Aplia Test</p>
     </footer>
 </body>
+
 </html>
