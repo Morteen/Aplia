@@ -29,7 +29,109 @@ $con->close();
 
 }
 
+function AddCustomer($FirstName,$Lastname,$Phone,$email){
+    include_once  'connect.php';
+    $con=kobleOpp();
 
+    $sql = "INSERT INTO customer(FirstName,LastName,Phone,Email)VALUES('$FirstName', '$Lastname','$Phone','$email')";
+    return $con->query($sql);
+    $con->close();
+}
 
+function getCustomerId(){
+    include_once  'connect.php';
+    $con=kobleOpp();
+    $sqlReturnId="SELECT CustomerId FROM customer ORDER BY CustomerId DESC LIMIT 1";
+    $result=$con->query($sqlReturnId);
+    if(!$result) die($conn->error);
+    $rows=$result->num_rows;
+    for($j=0;$j<$rows;$j++){
+        $result->data_seek($j);
+        $row=$result->fetch_array(MYSQLI_ASSOC);
+         
+        $CustomerId=$row['CustomerId'];
+    
+    
+               
+    };
+    return $CustomerId;
+}
+function getNumRooms($HotelId){
+    include_once  'connect.php';
+    $con=kobleOpp();
+    $NumOfRooms=0;
+   
+    $numRoomsSql="SELECT NumberOfRooms FROM hotel WHERE HotelId=$HotelId ";
+    $res=$con->query($numRoomsSql);
+    if(!$res) die($conn->error);
+   
+    $rows1=$res->num_rows;
+    
+    for($i=0;$i<$rows1;$i++){
+        $res->data_seek($i);
+        $row=$res->fetch_array(MYSQLI_ASSOC);
+        
+        $NumOfRooms=$row['NumberOfRooms'];
+       
 
+    
+               
+    };
+    return  $NumOfRooms;
+    
+         
+    
+
+}
+function getRoomPrice($HotelId){
+    include_once 'connect.php';
+    $con=kobleOpp();
+    $RoomPrice=0;
+   
+    $numRoomsSql="SELECT RoomPrice FROM hotel WHERE HotelId=$HotelId ";
+    $res=$con->query($numRoomsSql);
+    if(!$res) die($conn->error);
+   
+    $rows1=$res->num_rows;
+    
+    for($i=0;$i<$rows1;$i++){
+        $res->data_seek($i);
+        $row=$res->fetch_array(MYSQLI_ASSOC);
+        
+        $RoomPrice=$row['RoomPrice'];
+       
+
+    
+               
+    };
+       
+    return $RoomPrice;
+
+}
+
+function getHotelName($HotelId){
+    include_once 'connect.php';
+    $con=kobleOpp();
+    $HotelName="";
+   
+    $numRoomsSql="SELECT HotelName FROM hotel WHERE HotelId=$HotelId ";
+    $res=$con->query($numRoomsSql);
+    if(!$res) die($conn->error);
+   
+    $rows1=$res->num_rows;
+    
+    for($i=0;$i<$rows1;$i++){
+        $res->data_seek($i);
+        $row=$res->fetch_array(MYSQLI_ASSOC);
+        
+        $HotelName=$row['HotelName'];
+       
+
+    
+               
+    };
+       
+    return $HotelName;
+
+}
 ?>

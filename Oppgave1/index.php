@@ -126,61 +126,81 @@ echo "Et eller flere felt er ikke fylt ut";
     
     include_once  'connect.php';
     $con=kobleOpp();
-         if($con){
-             echo"Success <br>";
+         if(!$con){
+             echo"Får ikke koblet opp til server <br>";
          };
     
     
     
-    $sql = "INSERT INTO customer(FirstName,LastName,Phone,Email)VALUES('$FirstName', '$Lastname','$Phone','$email')";
+  
     
-    if ($con->query($sql) === TRUE) {
-    echo "Kunde opplysninger er registret <br>";
+    if (AddCustomer($FirstName,$Lastname,$Phone,$email) === TRUE){
+   
     ////////////////////////////
-    $sqlReturnId="SELECT CustomerId FROM customer ORDER BY CustomerId DESC LIMIT 1";
-    $result=$con->query($sqlReturnId);
-    if(!$result) die($conn->error);
-    $rows=$result->num_rows;
-    for($j=0;$j<$rows;$j++){
-        $result->data_seek($j);
-        $row=$result->fetch_array(MYSQLI_ASSOC);
-         
-        $CustomerId=$row['CustomerId'];
+    $CustomerId=getCustomerId();
     
-    
-               
-    };
     $checkRoomsSql="SELECT hotel.HotelName,hotel.NumberOfRooms,hotel.RoomPrice,bookings.TotalRooms FROM hotel,bookings WHERE ArrivalDate BETWEEN '$ArrivalDate' And '$DepartureDate' And hotel.HotelId=$HotelId ";
     
     $res=$con->query($checkRoomsSql);
     if(!$res) die($conn->error);
     $rows1=$res->num_rows;
-    echo $rows1." Antall bookinger som matcher<br>";
+   
     $TakenRooms=0;
+    $NumOfRooms=0;
+    $RoomPrice=0;
+    $HotelName="";
+    
     for($i=0;$i<$rows1;$i++){
         $res->data_seek($i);
         $row=$res->fetch_array(MYSQLI_ASSOC);
          
         $HotelName=$row['HotelName'];
-        echo $row['TotalRooms']."<br>";
         $TakenRooms=$TakenRooms+$row['TotalRooms'];
         $RoomPrice=$row['RoomPrice'];
         $NumOfRooms=$row['NumberOfRooms'];
     
                
     };
+    if($NumOfRooms===0){
+        $NumOfRooms=getNumRooms($HotelId);
+        $RoomPrice=getRoomPrice($HotelId);
+        $HotelName=getHotelName($HotelId);
+      
+    }
     
-echo $TakenRooms/'2'." Opptatte rom <br> Rom pris".$RoomPrice."<br>";
-if($TakenRooms+($Quantity/2)>$NumOfRooms){
+if($TakenRooms===0){
+   if(($Quantity/2)>$NumOfRooms){
     echo "Det er ikke ledig kapasitet på hotellet  for.$Quantity. personer i denne perioden !<br>";
 }else{
+
     $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($CustomerId,$HotelId,'$ArrivalDate','$DepartureDate',$Quantity)";
     if($con->query($bookingSql) ==true){
     echo "Bookingen er registrert <br>";
     }else{
+    echo "<div class='alert alert-danger' role='alert'>'Error: ' . $bookingSql . $con->error.</div>";
+    }
+
+}
+   
+}
+if($TakenRooms+($Quantity/2)>$NumOfRooms){
+    echo "Det er ikke ledig kapasitet på hotellet  for.$Quantity. personer i denne perioden !<br>";
+}else{
+
+
+    $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($CustomerId,$HotelId,'$ArrivalDate','$DepartureDate',$Quantity)";
+    if($con->query($bookingSql) ==true){
+
+    $TotalPrice =$RoomPrice*$Quantity;
+    echo "<div class='alert alert-success' role='alert'>$FirstName din booking ved hotell $HotelName <br>fra  $ArrivalDate til $DepartureDate er registert<br> Prisen er $RoomPrice pr person pr natt Totalt: $TotalPrice</div>";
+    }else{
+
+
+
     echo "Error: " . $bookingSql . "<br>" . $con->error;
     }
 }
+
 
   
     } else {
