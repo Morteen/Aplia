@@ -51,9 +51,16 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
     <div class="container">
         <section id="main">
             <h1>Velkommen</h1>
+
+            
+
+
+
+            
             
 
 <form name="bookingForm"action='index.php'method="post" >
+
 
 <table >
     <tr>
@@ -89,12 +96,24 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
 </table>
 
 </form>
+
 <?php
 /*his/her phone, email and selecting the hotel
 from a drop-down list, the*/
 if(isset($_POST['submit'])){
-   
 
+if(empty($_POST['FirstName'])||empty($_POST['LastName'])||empty($_POST['Phone'])||empty($_POST['Email'])||empty($_POST['quantity'])||empty($_POST['ArrivalDate'])||empty($_POST['DepartureDate'])){
+
+
+
+
+
+echo "Et eller flere felt er ikke fylt ut";
+
+
+
+}else{
+   
     $FirstName=$_POST['FirstName'];
     $Lastname=$_POST['LastName'];
     $Phone=$_POST['Phone'];
@@ -110,17 +129,15 @@ if(isset($_POST['submit'])){
          if($con){
              echo"Success <br>";
          };
-
-
-    /*$sqlCustomer = "INSERT INTO customer(FirstName,LastName,Phone,Email)VALUES(?,?,?,?)";
-    $stmt=$con->prepare( $sqlCustomer);
-    $stmt->bind_param("ssss",$FirstName,$Lastname,$Phone,$email);*/
+    
+    
+    
     $sql = "INSERT INTO customer(FirstName,LastName,Phone,Email)VALUES('$FirstName', '$Lastname','$Phone','$email')";
-
-if ($con->query($sql) === TRUE) {
-    echo "New record created successfully<br>";
-////////////////////////////
-$sqlReturnId="SELECT CustomerId FROM customer ORDER BY CustomerId DESC LIMIT 1";
+    
+    if ($con->query($sql) === TRUE) {
+    echo "Kunde opplysninger er registret <br>";
+    ////////////////////////////
+    $sqlReturnId="SELECT CustomerId FROM customer ORDER BY CustomerId DESC LIMIT 1";
     $result=$con->query($sqlReturnId);
     if(!$result) die($conn->error);
     $rows=$result->num_rows;
@@ -132,33 +149,50 @@ $sqlReturnId="SELECT CustomerId FROM customer ORDER BY CustomerId DESC LIMIT 1";
     
     
                
-  };
-  $TestInn= new DateTime($ArrivalDate);
-  echo $ArrivalDate."<br>".$DepartureDate."<br>";
-  $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($CustomerId,$HotelId,$ArrivalDate,$TestInn,$Quantity)";
-  if($con->query($bookingSql) ==true){
-    echo "New record created successfully<br>";
-  }else{
+    };
+    $checkRoomsSql="SELECT hotel.HotelName,hotel.NumberOfRooms,hotel.RoomPrice,bookings.TotalRooms FROM hotel,bookings WHERE ArrivalDate BETWEEN '$ArrivalDate' And '$DepartureDate' And hotel.HotelId=$HotelId ";
+    
+    $res=$con->query($checkRoomsSql);
+    if(!$res) die($conn->error);
+    $rows1=$res->num_rows;
+    echo $rows1." Antall bookinger som matcher<br>";
+    $TakenRooms=0;
+    for($i=0;$i<$rows1;$i++){
+        $res->data_seek($i);
+        $row=$res->fetch_array(MYSQLI_ASSOC);
+         
+        $HotelName=$row['HotelName'];
+        echo $row['TotalRooms']."<br>";
+        $TakenRooms=$TakenRooms+$row['TotalRooms'];
+        $RoomPrice=$row['RoomPrice'];
+        $NumOfRooms=$row['NumberOfRooms'];
+    
+               
+    };
+    
+echo $TakenRooms/'2'." Opptatte rom <br> Rom pris".$RoomPrice."<br>";
+if($TakenRooms+($Quantity/2)>$NumOfRooms){
+    echo "Det er ikke ledig kapasitet på hotellet  for.$Quantity. personer i denne perioden !<br>";
+}else{
+    $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($CustomerId,$HotelId,'$ArrivalDate','$DepartureDate',$Quantity)";
+    if($con->query($bookingSql) ==true){
+    echo "Bookingen er registrert <br>";
+    }else{
     echo "Error: " . $bookingSql . "<br>" . $con->error;
-  }
-  //////////////	
- 
-    
-
-    /////////////////
-} else {
-    echo "Error: " . $sql . "<br>" . $con->error;
+    }
 }
-    
-    
-$con->close();
 
-
+  
+    } else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+    }
+    
+    $con->close();
+    
+}
 
  }
-?>
-
-                    
+?>            
 	
    
 

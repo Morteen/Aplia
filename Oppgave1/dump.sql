@@ -45,4 +45,15 @@ SELECT LAST_INSERT_ID()
 INSERT INTO customer(FirstName,LastName,Phone,Email)VALUES("Fornavn","Etternvn","telefon","email");
 SELECT LAST_INSERT_ID();
 
+
+
+select
+   RoomPrice
+   
+from
+   hotel
+       join bookings
+            on hotel.HotelId=bookings.HotelId
+where hotel.HotelId=3 and bookings.ArrivalDate between 2019-01-30 and 2019-01-31
+
 */

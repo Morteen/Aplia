@@ -28,4 +28,8 @@ function populateHotelDropDown(){
 $con->close();
 
 }
+
+
+
+
 ?>
