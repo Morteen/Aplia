@@ -43,11 +43,7 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
             </ul>
         </div>
     </nav>
-    <section id="showcase">
-        <div class="container">
-            <h2>Mortens booking side</h2>
-        </div>
-    </section>
+   
     <div class="container">
         <section id="main">
             <h1>Velkommen</h1>
@@ -225,9 +221,7 @@ if($TakenRooms+($Quantity/2)>$NumOfRooms){
         </section>
        
     </div> 
-    <footer id="main-footer">
-        <p>Copyright &copy 2017 Aplia Test</p>
-    </footer>
+    
 </body>
 
 </html>

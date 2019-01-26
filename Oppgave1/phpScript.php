@@ -29,6 +29,39 @@ $con->close();
 
 }
 
+
+function populateCityDropD(){
+
+
+    include_once  'connect.php';
+    $con=kobleOpp();
+         if($con){
+             echo"Success";
+         };
+
+
+    $sqlHotel = "SELECT DISTINCT City  FROM hotel";
+    $result=$con->query($sqlHotel);
+    if(!$result) die($conn->error);
+    $rows=$result->num_rows;
+
+    echo "<option value='' selected disabled hidden>Velg ønsket by</option>";
+    for($j=0;$j<$rows;$j++){
+        $result->data_seek($j);
+        $row=$result->fetch_array(MYSQLI_ASSOC);
+        $CityName = $row['City'];
+
+        echo  "<option value=".$HotelId .">".$CityName."</option>";
+               
+  };	
+$con->close();
+
+
+
+}
+
+
+
 function AddCustomer($FirstName,$Lastname,$Phone,$email){
     include_once  'connect.php';
     $con=kobleOpp();
@@ -134,4 +167,50 @@ function getHotelName($HotelId){
     return $HotelName;
 
 }
+
+function searchForHotelId($City){
+
+    include_once 'connect.php';
+    $con=kobleOpp();
+    $HotelId="";
+   
+    $SearchId="SELECT HotelId  FROM hotel WHERE City=$City ";
+    $res=$con->query(SearchId);
+    if(!$res) die($conn->error);
+    $rows1=$res->num_rows;
+        for($i=0;$i<$rows1;$i++){
+        $res->data_seek($i);
+        $row=$res->fetch_array(MYSQLI_ASSOC);
+        
+        $HotelId=$row['HotelId'];
+               
+    };
+    $con->close();
+    return $HotelId;
+
+}
+function getHotels($City, $ArrivalDate, $DepartureDate){
+    $con=kobleOpp();
+    $Id=searchForHotelId($City);
+
+
+    $SearchId="SELECT HotelId  FROM hotel WHERE City=$City ";
+    $res=$con->query(SearchId);
+    if(!$res) die($conn->error);
+    $rows1=$res->num_rows;
+        for($i=0;$i<$rows1;$i++){
+        $res->data_seek($i);
+        $row=$res->fetch_array(MYSQLI_ASSOC);
+        
+        $HotelId=$row['HotelId'];
+               
+    };
+    $con->close();
+
+
+
+}
+
+
+
 ?>

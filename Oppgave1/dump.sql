@@ -47,13 +47,13 @@ SELECT LAST_INSERT_ID();
 
 
 
-select
-   RoomPrice
-   
-from
-   hotel
-       join bookings
-            on hotel.HotelId=bookings.HotelId
-where hotel.HotelId=3 and bookings.ArrivalDate between 2019-01-30 and 2019-01-31
+SELECT *FROM hotel
+ INNER JOIN
+ bookings ON hotel.HotelId = bookings.HotelId
+ WHERE hotel.City LIKE 'London'
+ AND (bookings.ArrivalDate NOT BETWEEN '2019-02-28' AND'2019-03-01')
+ GROUP BY bookings.TotalRooms
+ HAVING hotel.NumberOfRooms>sum(bookings.TotalRooms-200)
+ ORDER BY hotel.RoomPrice DESC
 
 */

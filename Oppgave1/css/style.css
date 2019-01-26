@@ -28,7 +28,7 @@
 }
 #navbar li{
     /*Dette gjør at list item ene i ul ligger side lengs og ikke nedover*/
-    display:inline
+    display:inline;
 }
 #navbar a{
    color:#fff;
@@ -89,6 +89,17 @@ th, td {
     margin-top: 5px;
     margin-bottom: 5px;
     text-align: left;
+  }
+  #searchList ul li {
+    display:inline;
+   
+  }
+  #searchList li{
+    display:inline;
+    list-style-type: none;
+  }
+  #searchForm{
+      margin-bottom:50px;
   }
 
 
