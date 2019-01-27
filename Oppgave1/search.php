@@ -91,8 +91,8 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
 
 <table>
     <tr>
-        <td><label class="bookingtext">Fornavn</label><br><input type="text"name="FirstName"class="StyleTextfield"/></td>
-        <td><label class="bookingtext">Etternavn</label><br><input type="text"name="LastName"class="StyleTextfield"/></td>
+        <td><label class="bookingtext">Fornavn</label><br><input type="text"name="FirstName"id="FirstName"class="StyleTextfield"/></td>
+        <td><label class="bookingtext">Etternavn</label><br><input type="text"name="LastName"id="LastName"class="StyleTextfield"/></td>
         <td><label class="bookingtext">Email</label><br><input type="email"name="Email"class="StyleTextfield"/> </td>
     </tr>
     
@@ -162,6 +162,9 @@ for (var hotel of hotelData){
 
         
 $("#result").on("click",".js-addToBooking",function () {
+
+ 
+
                 var button = $(this);
                console.log("Knappen virker")
                 var HotelId=button.attr("data-hotel-id");
@@ -193,12 +196,43 @@ $("#result").on("click",".js-addToBooking",function () {
 
             })        
             $("#bookingBtn").on("click",function () {
-              //$CustomerId,$HotelId,'$ArrivalDate','$DepartureDate',$Quantity
+
+
+/*if($("#FirstName").val()!=""){
+                <?php
+                $FirstName=$_POST['FirstName'];
+                $Lastname=$_POST['LastName'];
+                $Phone=$_POST['Phone'];
+                $email=$_POST['Email'];
+                ?>}*/
+                
+
+             
               id;
-              var customerId=2;
+              var FirstName=$("#FirstName").val();
+              var LastName=$("#Lastname").val();
+              var Phone=$("#Phone").val();
+              var email=$("#Email").val();
               var ArrivalDate=$("#ArrivalDate1").val();
               var DepartureDate=$("#DepartureDate1").val();
               var Quantity=$("#quantity").val();
+              var customerId
+
+              $.ajax({
+                            url:"addCustomer.php",
+                            method: "POST",
+                            data:{FirstName:FirstName,LastName:LastName,Phone:Phone,email:email},
+                           dataType: 'text',
+                           success:function(data){
+                               console.log(data);
+                               customerId=data;                              
+                               
+
+                           },error: function(xhr, status, error){
+                              console.log(error+" ",status)
+                           } 
+                           
+                        })
 
 
               $.ajax({

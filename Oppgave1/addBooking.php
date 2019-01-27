@@ -10,12 +10,12 @@ if(isset($_POST['HotelId'])){
          $DepartureDate=$_POST['DepartureDate'];
          $Quantity=$_POST['Quantity'];
          
-         $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($CustomerId,$HotelId,'$ArrivalDate','$DepartureDate',$Quantity)";
+         $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($customerId,$Id,'$ArrivalDate','$DepartureDate',$Quantity)";
          if($con->query($bookingSql)===true){
         echo "Ok";
         }
         }else{
-            echo"Hotelid mangler"
+            echo"Hotelid mangler";
         }
 
 
