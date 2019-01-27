@@ -195,7 +195,13 @@ for($i=0;$i<$rows;$i++){
 };
 return $response;
 }
-
+ function addBooking($CustomerId,$HotelId,$ArrivalDate,$DepartureDate,$Quantity){
+    $con=kobleOpp();
+    $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($CustomerId,$HotelId,'$ArrivalDate','$DepartureDate',$Quantity)";
+    if($con->query($bookingSql)===true){
+    return true;
+}
+ }
 
 
 ?>

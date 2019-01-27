@@ -22,6 +22,7 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
 
     <script>
   $( function() {
+      $("#submitform").hide();
     $( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
   } );
   </script>
@@ -83,18 +84,55 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
 </table>
 
 
-</form>
-<table id='result'>
+</form  >
+<table id='result' class="table table-bordered table-hover">
 </table>
+<form  name="submitform"action='search.php'method="post"id="submitform">
+
+<table>
+    <tr>
+        <td><label class="bookingtext">Fornavn</label><br><input type="text"name="FirstName"class="StyleTextfield"/></td>
+        <td><label class="bookingtext">Etternavn</label><br><input type="text"name="LastName"class="StyleTextfield"/></td>
+        <td><label class="bookingtext">Email</label><br><input type="email"name="Email"class="StyleTextfield"/> </td>
+    </tr>
+    
+    
+    <tr>
+    <td><label class="bookingtext">Telefon</label><br><input type="text"name="Phone"class="StyleTextfield"/> </td>
+        <td>
+        </td>
+    
+    </tr>
+    <tr>
+    <td><label class="bookingtext">Hotel</label><br><input type="text"name="HotelName"id ="HotelName"class="StyleTextfield"/> </td>
+    <td><label class="bookingtext">Pris</label><br><input type="text"name="Price"id ="Price"class="StyleTextfield"/> </td>
+   
+    </tr>
+    
+    <tr>
+        
+        <td><label>Ankomst dato</label><br><input type="text" class="StyleTextfield" id="ArrivalDate1"name="ArrivalDate1"></td>
+        <td><label>Avreise dato</label><br><input type="text" class="StyleTextfield" id="DepartureDate1" name="DepartureDate1"></td>
+        <td><label>Antall rom</label><br><input type="number" id="quantity"name="quantity" min="1" max="30"class="StyleTextfield"></td>
+        <td></td>
+    </tr>
+    
+    <tr>
+        <td></td>
+        <td><br><input method="post" name="booking"id="bookingBtn" value="Lagre booking" class="btn btn-primary"/></td>
+    </tr>
+</table>
+<input type="hidden" id="hotelId" name="HotelId" >
+
+
+</form>
+
 <?php
 
 if(isset($_POST['submit'])){ 
-
-    //||empty($_POST['CityName'])||empty($_POST['DepartureDate'])
     if(empty($_POST['ArrivalDate'])){
         echo "<div class='alert alert-warning' role='alert'>Et eller flere felt er ikke fylt ut!</div>";
      }else{
-
 
         $ArrivalDate=$_POST['ArrivalDate'];
         $DepartureDate=$_POST['DepartureDate'];
@@ -109,18 +147,78 @@ $HotelData=getHotels($City, $ArrivalDate, $DepartureDate);
 ?>  
 <script type="text/javascript">
 
-hotelData=<?php echo json_encode($HotelData)?>;
+var hotelData=<?php echo json_encode($HotelData)?>;
+var ArrivalDate=<?php echo json_encode($ArrivalDate)?>;
+var  DepartureDate=<?php echo json_encode($DepartureDate)?>;
+var Id="";
 console.log(hotelData)
 for (var hotel of hotelData){
     console.log(hotel);
     $("#result").append("<tr><td>"+hotel.HotelName+"</td><td>"+hotel.RoomPrice+"</td><td></td>"+
-    "<td><button class='btn btn-primary js-addToBooking' data-hotel-id=" + hotel.HotelId + ">  Bestill </button> </td>" 
+    "<td><button class='btn btn-primary js-addToBooking' data-hotel-id="+ hotel.HotelId +" >  Bestill </button> </td>" 
     )
 }
 
 
-                
+        
+$("#result").on("click",".js-addToBooking",function () {
+                var button = $(this);
+               console.log("Knappen virker")
+                var HotelId=button.attr("data-hotel-id");
+                id=HotelId;
+                $.ajax({
+                            url:"getHotel.php",
+                            method: "POST",
+                            data:{HotelId:HotelId},
+                           dataType: 'json',
+                           success:function(data){
+                               console.log(data);
+                                                          
+                               $('#ArrivalDate1').val(ArrivalDate);
+                               $('#DepartureDate1').val(DepartureDate);
+                               $('#HotelName').val(data.HotelName);
+                               $('#Price').val(data.RoomPrice);
+                               $("#hotelId").val(data.HotelId);
 
+                               $("#submitform").show();
+                               $("#result").hide();
+
+                           },error: function(xhr, status, error){
+                              console.log(error+" ",status)
+                           } 
+                           
+                        })
+              
+               
+
+            })        
+            $("#bookingBtn").on("click",function () {
+              //$CustomerId,$HotelId,'$ArrivalDate','$DepartureDate',$Quantity
+              id;
+              var customerId=2;
+              var ArrivalDate=$("#ArrivalDate1").val();
+              var DepartureDate=$("#DepartureDate1").val();
+              var Quantity=$("#quantity").val();
+
+
+              $.ajax({
+                            url:"addBooking.php",
+                            method: "POST",
+                            data:{HotelId:id,customerId:customerId,ArrivalDate:ArrivalDate,DepartureDate:DepartureDate,Quantity},
+                           dataType: 'text',
+                           success:function(data){
+                               console.log(data);
+                                                          
+                               
+
+                           },error: function(xhr, status, error){
+                              console.log(error+" ",status)
+                           } 
+                           
+                        })
+
+
+            })
 
 
 
