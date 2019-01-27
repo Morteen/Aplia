@@ -23,6 +23,7 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
     <script>
   $( function() {
       $("#submitform").hide();
+      $("#confirmBooking").hide();
     $( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
   } );
   </script>
@@ -126,6 +127,7 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
 
 
 </form>
+<div id="confirmBooking"></div>
 
 <?php
 
@@ -225,7 +227,11 @@ $("#result").on("click",".js-addToBooking",function () {
                            dataType: 'text',
                            success:function(data){
                                console.log(data);
-
+                               $("#confirmBooking").append(
+                                   "<div class='alert alert-success' role='alert'>"+FirstName+" din booking ved"+$("#HotelName").val()+" er registrert</div>")
+                               $("#confirmBooking").show(); 
+                               $("#submitform").hide();
+                               $("#result").hide(); 
                                       $("#FirstName").val(""); 
                                       $("#LastName").val("");  
                                       $("#Phone").val("");  
@@ -235,8 +241,8 @@ $("#result").on("click",".js-addToBooking",function () {
                                $('#HotelName').val("");
                                $('#Price').val("");
                                $("#hotelId").val("");   
-                               $("#submitform").hide();
-                               $("#result").hide();           
+                               
+                                       
                                
 
                            },error: function(xhr, status, error){
