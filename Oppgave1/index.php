@@ -68,14 +68,17 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
     
     <tr>
         <td><label>Antall rom</label><br><input type="number" name="quantity" min="1" max="10"class="StyleTextfield"></td>
-        <td><label>Velg hotell</label><br><select name='hotelname' class="StyleTextfield">
-<option value="" selected disabled hidden>Velg Hotell her</option>
-    <?php  
-   include_once 'phpScript.php';
-   populateHotelDropDown();
+        <td>
+            <label>Velg hotell</label><br>
+            <select name='hotelname' class="StyleTextfield">
+                    <option value="" selected disabled hidden>Velg Hotell her</option>
+                            <?php  
+                                 include_once 'phpScript.php';
+                                populateHotelDropDown();
 
-    ?>
-</select></td>
+                             ?>
+            </select>
+        </td>
 <td><label class="bookingtext">Telefon</label><br><input type="text"name="Phone"class="StyleTextfield"/> </td>
     </tr>
     
@@ -94,8 +97,7 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
 </form>
 
 <?php
-/*his/her phone, email and selecting the hotel
-from a drop-down list, the*/
+
 if(isset($_POST['submit'])){
 
 if(empty($_POST['FirstName'])||empty($_POST['LastName'])||empty($_POST['Phone'])||empty($_POST['Email'])||empty($_POST['quantity'])||empty($_POST['ArrivalDate'])||empty($_POST['DepartureDate'])){
@@ -104,7 +106,7 @@ if(empty($_POST['FirstName'])||empty($_POST['LastName'])||empty($_POST['Phone'])
 
 
 
-echo "Et eller flere felt er ikke fylt ut";
+    echo "<div class='alert alert-warning' role='alert'>Et eller flere felt er ikke fylt ut!</div>";
 
 
 
@@ -187,7 +189,7 @@ if($TakenRooms+($Quantity/2)>$NumOfRooms){
     $bookingSql="INSERT INTO Bookings(CustomerId,HotelId,ArrivalDate,DepartDate,TotalRooms)VALUES($CustomerId,$HotelId,'$ArrivalDate','$DepartureDate',$Quantity)";
     if($con->query($bookingSql) ==true){
 
-    $TotalPrice =$RoomPrice*$Quantity;
+    $TotalPrice=$RoomPrice*($Quantity/2);
     echo "<div class='alert alert-success' role='alert'>$FirstName din booking ved hotell $HotelName <br>fra  $ArrivalDate til $DepartureDate er registert<br> Prisen er $RoomPrice pr person pr natt Totalt: $TotalPrice</div>";
     }else{
 

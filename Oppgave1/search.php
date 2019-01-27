@@ -84,23 +84,47 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
 
 
 </form>
+<table id='result'>
+</table>
 <?php
 
 if(isset($_POST['submit'])){ 
-    if(empty($_POST['ArrivalDate'])||empty($_POST['CityName'])||empty($_POST['DepartureDate'])){
+
+    //||empty($_POST['CityName'])||empty($_POST['DepartureDate'])
+    if(empty($_POST['ArrivalDate'])){
         echo "<div class='alert alert-warning' role='alert'>Et eller flere felt er ikke fylt ut!</div>";
      }else{
+
+
         $ArrivalDate=$_POST['ArrivalDate'];
         $DepartureDate=$_POST['DepartureDate'];
         $City=$_POST['City'];
 
 
+$HotelData=getHotels($City, $ArrivalDate, $DepartureDate);
      }//Slutt på emptyfield sjekk
 
 }  //Slutt på submit 
 	
 ?>  
+<script type="text/javascript">
 
+hotelData=<?php echo json_encode($HotelData)?>;
+console.log(hotelData)
+for (var hotel of hotelData){
+    console.log(hotel);
+    $("#result").append("<tr><td>"+hotel.HotelName+"</td><td>"+hotel.RoomPrice+"</td><td></td>"+
+    "<td><button class='btn btn-primary js-addToBooking' data-hotel-id=" + hotel.HotelId + ">  Bestill </button> </td>" 
+    )
+}
+
+
+                
+
+
+
+
+</script>
 
     
 

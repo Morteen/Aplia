@@ -51,7 +51,7 @@ function populateCityDropD(){
         $row=$result->fetch_array(MYSQLI_ASSOC);
         $CityName = $row['City'];
 
-        echo  "<option value=".$HotelId .">".$CityName."</option>";
+        echo  "<option value=".$CityName.">".$CityName."</option>";
                
   };	
 $con->close();
@@ -119,7 +119,7 @@ function getNumRooms($HotelId){
 function getRoomPrice($HotelId){
     include_once 'connect.php';
     $con=kobleOpp();
-    $RoomPrice=0;
+        $RoomPrice=0;
    
     $numRoomsSql="SELECT RoomPrice FROM hotel WHERE HotelId=$HotelId ";
     $res=$con->query($numRoomsSql);
@@ -168,47 +168,32 @@ function getHotelName($HotelId){
 
 }
 
-function searchForHotelId($City){
 
-    include_once 'connect.php';
+
+
+function getHotels($City,$ArrivalDate,$DepartureDate){
     $con=kobleOpp();
-    $HotelId="";
-   
-    $SearchId="SELECT HotelId  FROM hotel WHERE City=$City ";
-    $res=$con->query(SearchId);
-    if(!$res) die($conn->error);
-    $rows1=$res->num_rows;
-        for($i=0;$i<$rows1;$i++){
-        $res->data_seek($i);
-        $row=$res->fetch_array(MYSQLI_ASSOC);
-        
-        $HotelId=$row['HotelId'];
-               
-    };
-    $con->close();
-    return $HotelId;
-
-}
-function getHotels($City, $ArrivalDate, $DepartureDate){
-    $con=kobleOpp();
-    $Id=searchForHotelId($City);
-
-
-    $SearchId="SELECT HotelId  FROM hotel WHERE City=$City ";
-    $res=$con->query(SearchId);
-    if(!$res) die($conn->error);
-    $rows1=$res->num_rows;
-        for($i=0;$i<$rows1;$i++){
-        $res->data_seek($i);
-        $row=$res->fetch_array(MYSQLI_ASSOC);
-        
-        $HotelId=$row['HotelId'];
-               
-    };
-    $con->close();
-
-
-
+    if($con){
+       
+    }else{echo"Får ikke koblet opp!";};
+    $sql="SELECT DISTINCT *FROM hotel
+    INNER JOIN
+    bookings ON hotel.HotelId = bookings.HotelId
+    WHERE hotel.City LIKE '$City'
+    AND (bookings.ArrivalDate NOT BETWEEN '$ArrivalDate' AND'$DepartureDate')
+    GROUP BY bookings.TotalRooms
+    HAVING hotel.NumberOfRooms>sum(bookings.TotalRooms-200)
+    ORDER BY hotel.RoomPrice DESC";
+$response = array();
+$res=$con->query($sql);
+if(!$res) die($con->error);
+$rows=$res->num_rows;
+for($i=0;$i<$rows;$i++){
+    $res->data_seek($i);
+    $row=$res->fetch_array(MYSQLI_ASSOC);
+    $response[] = $row;
+};
+return $response;
 }
 
 
