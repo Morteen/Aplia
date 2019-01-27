@@ -37,9 +37,9 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
     <nav id="navbar">
         <div class="container">
             <ul>
-                <li><a href="#">Hjem</a></li>
+               
                 
-                <li><a href="#">Søk</a></li>
+                <li><a href="search.php">Søk</a></li>
             </ul>
         </div>
     </nav>
