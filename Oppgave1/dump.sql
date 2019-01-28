@@ -56,4 +56,7 @@ SELECT *FROM hotel
  HAVING hotel.NumberOfRooms>sum(bookings.TotalRooms-200)
  ORDER BY hotel.RoomPrice DESC
 
+
+ SELECT DISTINCT* FROM hotel WHERE City LIKE'Paris' AND HotelId NOT IN(SELECT HotelId from bookings where ArrivalDate BETWEEN '2019-01-28' AND '2019-01-29' )
+
 */

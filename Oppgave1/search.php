@@ -40,6 +40,7 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
         <div class="container">
             <ul>
                 <li><a href="index.php">Hjem</a></li>
+                <li><a href="../Oppgave2/nyheter.php">Rss</a></li>
                 
                
             </ul>

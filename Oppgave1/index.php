@@ -40,6 +40,7 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
                
                 
                 <li><a href="search.php">Søk</a></li>
+                <li><a href="../Oppgave2/nyheter.php">Rss</a></li>
             </ul>
         </div>
     </nav>
