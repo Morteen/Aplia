@@ -176,14 +176,26 @@ function getHotels($City,$ArrivalDate,$DepartureDate){
     if($con){
        
     }else{echo"Får ikke koblet opp!";};
-    $sql="SELECT DISTINCT *FROM hotel
+    /*$sql="SELECT DISTINCT *FROM hotel
     INNER JOIN
     bookings ON hotel.HotelId = bookings.HotelId
     WHERE hotel.City LIKE '$City'
     AND (bookings.ArrivalDate NOT BETWEEN '$ArrivalDate' AND'$DepartureDate')
     GROUP BY bookings.TotalRooms
     HAVING hotel.NumberOfRooms>sum(bookings.TotalRooms-200)
-    ORDER BY hotel.RoomPrice DESC";
+    ORDER BY hotel.RoomPrice DESC";*/
+
+    $sql="SELECT DISTINCT * FROM hotel WHERE hotel.City LIKE'$City'
+    AND HotelId NOT IN(SELECT HotelId from bookings where ArrivalDate BETWEEN '$ArrivalDate' AND '$DepartureDate' )
+    and hotel.NumberOfRooms>(SELECT sum(bookings.TotalRooms/2)FROM hotel
+     INNER JOIN
+     bookings ON hotel.HotelId = bookings.HotelId
+     WHERE hotel.City LIKE '$City'
+     AND bookings.ArrivalDate NOT BETWEEN '$ArrivalDate' AND '$DepartureDate'
+    )
+     ORDER BY hotel.RoomPrice DESC";
+
+
 $response = array();
 $res=$con->query($sql);
 if(!$res) die($con->error);

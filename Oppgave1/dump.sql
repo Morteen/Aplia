@@ -36,27 +36,21 @@ FOREIGN KEY (HotelId) REFERENCES Hotel(HotelId)
 
 /*DECLARE @hotel TABLE (CustomerID INT),
 
-INSERT INTO MyTable(FirstName, LastName, Phone,E)
-OUTPUT INSERTED.CustomerID INTO @hotel(CustomerID)
-VALUES ('Yatrix', '1234 Address Stuff', '1112223333')
-
-SELECT LAST_INSERT_ID()
-
-INSERT INTO customer(FirstName,LastName,Phone,Email)VALUES("Fornavn","Etternvn","telefon","email");
-SELECT LAST_INSERT_ID();
 
 
 
-SELECT *FROM hotel
+
+
+
+SELECT DISTINCT * FROM hotel WHERE hotel.City LIKE'Paris'
+AND HotelId NOT IN(SELECT HotelId from bookings where ArrivalDate BETWEEN '2019-01-28' AND '2019-01-29' )
+and hotel.NumberOfRooms>(SELECT sum(bookings.TotalRooms/2)FROM hotel
  INNER JOIN
  bookings ON hotel.HotelId = bookings.HotelId
- WHERE hotel.City LIKE 'London'
- AND (bookings.ArrivalDate NOT BETWEEN '2019-02-28' AND'2019-03-01')
- GROUP BY bookings.TotalRooms
- HAVING hotel.NumberOfRooms>sum(bookings.TotalRooms-200)
+ WHERE hotel.City LIKE 'Paris'
+ AND bookings.ArrivalDate NOT BETWEEN '2019-01-28' AND'2019-01-29'
+)
+
  ORDER BY hotel.RoomPrice DESC
-
-
- SELECT DISTINCT* FROM hotel WHERE City LIKE'Paris' AND HotelId NOT IN(SELECT HotelId from bookings where ArrivalDate BETWEEN '2019-01-28' AND '2019-01-29' )
 
 */
