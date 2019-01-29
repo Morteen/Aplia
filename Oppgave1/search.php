@@ -24,13 +24,13 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
   $( function() {
       $("#submitform").hide();
       $("#confirmBooking").hide();
-    $( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
+     $( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
   } );
   </script>
 
 
 </head>
-<body>
+<tbody>
    <header id="main-header">
        <div class="container">
            <h1>Aplia test search </h1>
@@ -87,7 +87,10 @@ integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18
 
 
 </form  >
-<table id='result' class="table table-bordered table-hover">
+
+<table class="table" id='result'>
+<tbody id="resultBody">
+</tbody>
 </table>
 <form  name="submitform"action='search.php'method="post"id="submitform">
 
@@ -151,13 +154,14 @@ $HotelData=getHotels($City, $ArrivalDate, $DepartureDate);
 <script type="text/javascript">
 
 var hotelData=<?php echo json_encode($HotelData)?>;
+
 var ArrivalDate=<?php echo json_encode($ArrivalDate)?>;
 var  DepartureDate=<?php echo json_encode($DepartureDate)?>;
 var Id="";
 console.log(hotelData)
 for (var hotel of hotelData){
     console.log(hotel);
-    $("#result").append("<tr><td>"+hotel.HotelName+"</td><td>"+hotel.RoomPrice+"</td><td></td>"+
+    $("#resultBody").append("<tr><td>"+hotel.HotelName+"</td><td>"+hotel.RoomPrice+"</td><td></td>"+
     "<td><button class='btn btn-primary js-addToBooking' data-hotel-id="+ hotel.HotelId +" >  Bestill </button> </td>" 
     )
 }
@@ -169,7 +173,6 @@ $("#result").on("click",".js-addToBooking",function () {
  
 
                 var button = $(this);
-               console.log("Knappen virker")
                 var HotelId=button.attr("data-hotel-id");
                 id=HotelId;
                 $.ajax({

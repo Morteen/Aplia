@@ -8,30 +8,35 @@ function hent_nyhter(){
    $image=array();
    
   foreach($data->channel->item as $item){
-     
-   
+     //henter category verdiene og legger dem i en tabell
+   if($item->category){ 
      $category[]=array(
         'domain'=>(string)$item->category->attributes(),
         'text'=>(string)$item->category
       );
-
-     //prøver å hente arrayen med bilde info
+   }
+     //henter arrayen med bilde info
+     if($item->children('media',true)->content){
      $media[] =array(  
-       'content'=>(string)$item->children('media', True)->content->attributes(),
-        'description'=>(string)$item->children('media', True)->description,
+         'content'=>(string)$item->children('media', True)->content->attributes(),
+         'description'=>(string)$item->children('media', True)->description,
         'credit'=>(string)$item->children('media', True)->credit
      );
-    
+   }
+   ///henter verdiene fra simple_xml objektet
+    if($item!=null){
      $articles[]= array( 
-        'title'=>(string)$item->title,
+        'title'=> (string)$item->title,
         'description'=>(string)$item->description,
         'link'=>(string)$item->link,
-        'pubDate'=> (string)$item->pubDate,
+        'dato'=> (string)$item->pubDate,
+        'pubDate'=> strtotime((string)$item->pubDate),
         'category'=>$category,
         'media'=>$media,
         'creator'=>$item->children('dc',true)->creator
         
      );
+   }
   }
    return $articles;
 }

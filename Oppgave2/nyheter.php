@@ -66,14 +66,29 @@ foreach(hent_nyhter() as $article){
       <a hrf=<?php echo $media['content'] ?> >
       <img src="<?php echo $media['content'];?>">
       </a>
-      <p>Media decription :<?php echo $media['description']?></p>
-     <p>Media Credit:<?php echo $media['credit']?></p>
-     
+      <p>Media decription:<br><?php echo $media['description']?></p>
+     <p>Media Credit:<br><?php echo $media['credit']?></p>
+    
       <?php
     }
     ?>
-     <p>PubDate::<?php echo $article['pubDate']?></p>
-     <p>Creator:<?php echo $article['creator']?></p>
+     <span>Publisert:<br><?php echo $article['pubDate']?> oversatt <?php echo $article['dato']?><br></span>
+     <span>Skrevet av:<br><?php echo $article['creator']?><br></span>
+     <?php
+     foreach($article['category'] as $cat){
+         ?>
+         <p>Category</p>
+         <a href=<?php echo $cat['domain']?>>
+         <?php  echo $cat['text']?>
+        </a>
+       
+        
+       
+        
+        <?php
+     }
+     
+     ?>
     
     <hr>
     </div>
